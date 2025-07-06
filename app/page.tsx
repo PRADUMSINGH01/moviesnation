@@ -3,6 +3,7 @@
 import { useState } from "react";
 import MovieCard from "@/components/MovieCard";
 import Script from "next/script";
+import MovieSearch from "@/components/MovieSearch";
 
 export default function Home() {
   // Sample data (replace with fetched data as needed)
@@ -48,23 +49,31 @@ export default function Home() {
   ];
 
   // Pagination state
-  const itemsPerPage = 4;
+  const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(featuredMovies.length / itemsPerPage);
 
   // Compute movies for current page
   const startIdx = (currentPage - 1) * itemsPerPage;
   const endIdx = startIdx + itemsPerPage;
-  const displayedMovies = featuredMovies.slice(startIdx, endIdx);
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredMovies = featuredMovies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const displayedMovies = filteredMovies.slice(startIdx, endIdx);
 
   return (
     <div className="pt-24 pb-16">
+      <MovieSearch onSearch={setSearchQuery} />
+
       {/* Featured Movies */}
       <Script
         strategy="afterInteractive"

@@ -8,7 +8,7 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Movies Nation - Download Latest Movies in HD",
+  title: "MoviesFlix - Download Latest Movies in HD",
   description:
     "Download the latest Hollywood, Bollywood, Netflix, Prime, and Hulu movies in HD quality. Free movie downloads for all platforms.",
   keywords: [
@@ -21,12 +21,12 @@ export const metadata: Metadata = {
     "free movie downloads",
     "hd movies",
   ],
-  authors: [{ name: "Movies Nation", url: "https://moviesnation.com" }],
+  authors: [{ name: "Movies Flix", url: "https://www.moviesflix.rent/" }],
   openGraph: {
-    title: "Movies Nation - Premium Movie Downloads",
+    title: "Movies Flix - Premium Movie Downloads",
     description: "Download the latest movies from all platforms in HD quality",
-    url: "https://moviesnation.com",
-    siteName: "Movies Nation",
+    url: "https://www.moviesflix.rent/",
+    siteName: "Movies Flix",
     images: [
       {
         url: "/og-image.jpg",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Movies Nation",
+    title: "Movies Flix",
     description: "Your ultimate destination for movie downloads",
     images: ["/og-image.jpg"],
   },
@@ -67,6 +67,10 @@ export default function RootLayout({
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <Script
+          type="text/javascript"
+          src="//pl27094747.profitableratecpm.com/21/84/49/2184495f4d2be0d373f879cdcd0b6f23.js"
+        ></Script>
       </body>
     </html>
   );
