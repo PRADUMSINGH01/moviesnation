@@ -1,8 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  domains: ["m.media-amazon.com"],
+  images: {
+    domains: [
+      'm.media-amazon.com',
+      // add any other hosts here
+    ],
+  },
 };
 
 export default nextConfig;

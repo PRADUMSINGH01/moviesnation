@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import MovieCard from "@/components/MovieCard";
 import Script from "next/script";
 import MovieSearch from "@/components/MovieSearch";
-import { getTopMovies } from "@/lib/getTopMovies"; // Import fetch function
+import { getTopMovies } from "@/lib/getTopMovies";
+import { getLatestMovies } from "@/lib/getlatest";
 type Movie = {
   id: string;
   title: string;
@@ -26,7 +27,8 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       const movieList = await getTopMovies();
-      setMovies(movieList);
+      const latest = await getLatestMovies();
+      setMovies([...latest]);
     };
     fetchData();
   }, []);
