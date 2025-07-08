@@ -64,9 +64,10 @@ export default function RootLayout({
         ></Script>
       </head>
       <body className={`${inter.className} bg-gray-900 text-white`}>
-        <Analytics />
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen">
+          {children} <Analytics />
+        </main>
         <Footer />
         <Script
           type="text/javascript"
