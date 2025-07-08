@@ -91,6 +91,10 @@ export default function Home() {
     <div className="pt-24 pb-16">
       <MovieSearch onSearch={setSearchQuery} />
 
+      <Script
+        type="text/javascript"
+        src="//www.highperformanceformat.com/0e828247f6746bb8922aab3dd36f5282/invoke.js"
+      ></Script>
       {/* Loading state */}
       {isLoading && (
         <div className="text-center py-12">

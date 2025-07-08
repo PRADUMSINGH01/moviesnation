@@ -63,6 +63,12 @@ export default function RootLayout({
           type="text/javascript"
           src="//pl27094339.profitableratecpm.com/4f/8f/f9/4f8ff905a41c2232099bded39b8a2f0d.js"
         ></Script>
+
+        <Script
+          data-cfasync="false"
+          src="//pl27094209.profitableratecpm.com/5f0fe2e0ad86538bbdddc0db3ac3f5a9/invoke.js"
+        ></Script>
+        <div id="container-5f0fe2e0ad86538bbdddc0db3ac3f5a9"></div>
       </head>
       <body className={`${inter.className} bg-gray-900 text-white`}>
         <Navbar />
