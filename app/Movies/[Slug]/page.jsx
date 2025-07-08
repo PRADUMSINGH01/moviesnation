@@ -1,10 +1,28 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { processMovieData } from "./processMovieData";
 import MovieTemplate from "./MovieTemplate";
-import { getMovieById } from "@/lib/getById"; // Your API logic
+import { getMovieByIdFromLocal } from "@/lib/getById";
 
-export default async function Page({ params }) {
-  const rawMovie = await getMovieById(params.Slug);
-  const movie = processMovieData(rawMovie); // ✅ convert safely
+export default function Page({ params }) {
+  const [movie, setMovie] = useState(null);
+
+  useEffect(() => {
+    async function loadMovie() {
+      const resolvedParams = await params;
+      const slug = resolvedParams?.Slug;
+
+      const rawMovie = getMovieByIdFromLocal(slug);
+      const processedMovie = processMovieData(rawMovie);
+
+      setMovie(processedMovie);
+    }
+
+    loadMovie();
+  }, [params]);
+
+  if (!movie) return <div>Loading...</div>;
 
   return <MovieTemplate movie={movie} />;
 }

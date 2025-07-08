@@ -43,7 +43,7 @@ export type Movie = {
   primaryTitle: string;
   originalTitle: string;
   description: string;
-  primaryImage?: string | null;
+  primaryImage: string | { url: string };
   trailer?: string | null;
   contentRating?: string | null;
   releaseDate?: string | null;
