@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
-
+import { Analytics } from "@vercel/analytics/next";
 export const metadata: Metadata = {
   title: "MoviesFlix - Download Latest Movies in HD",
   description:
@@ -64,6 +64,7 @@ export default function RootLayout({
         ></Script>
       </head>
       <body className={`${inter.className} bg-gray-900 text-white`}>
+        <Analytics />
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
