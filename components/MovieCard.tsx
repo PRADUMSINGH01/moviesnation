@@ -9,6 +9,7 @@ type Movie = {
   description: string;
   url: string;
 };
+import Image from "next/image";
 export default function MovieCard({ movie }: { movie: Movie }) {
   const imageUrl =
     typeof movie.image === "string"
@@ -18,7 +19,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   return (
     <div className="bg-gray-900 text-white rounded-lg shadow-md overflow-hidden transition hover:scale-105 duration-300">
       <Link href={`/Movies/${movie.id}`}>
-        <img
+        <Image
           src={imageUrl}
           alt={movie.title}
           width={300}

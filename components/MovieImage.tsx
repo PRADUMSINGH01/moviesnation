@@ -1,6 +1,6 @@
 // components/MovieImage.tsx
 "use client";
-
+import Image from "next/image";
 import { useState } from "react";
 
 export default function MovieImage({
@@ -31,6 +31,11 @@ export default function MovieImage({
   }
 
   return (
-    <img src={imageSrc} alt={alt} className={className} onError={handleError} />
+    <Image
+      src={imageSrc}
+      alt={alt}
+      className={className}
+      onError={handleError}
+    />
   );
 }

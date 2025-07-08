@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.moviesflix.rent
+
+# Sitemaps
+Sitemap: https://www.moviesflix.rent/sitemap.xml

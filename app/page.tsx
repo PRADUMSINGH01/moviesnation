@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import MovieCard from "@/components/MovieCard";
 import Script from "next/script";
 import MovieSearch from "@/components/MovieSearch";
-import { getTopMovies } from "@/lib/getTopMovies";
 import { getLatestMovies } from "@/lib/getlatest";
 type Movie = {
   id: string;
