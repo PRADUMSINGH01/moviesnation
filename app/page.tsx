@@ -131,7 +131,7 @@ export default function Home() {
               <div className="mb-6 text-center">
                 <p className="text-gray-400">
                   Showing {displayedMovies.length} of {filteredMovies.length}{" "}
-                  results for "{searchQuery}"
+                  results for &quot;{searchQuery}&quot;
                 </p>
               </div>
             )}
@@ -188,7 +188,7 @@ export default function Home() {
               No Movies Found
             </h3>
             <p className="text-gray-500 mb-4">
-              We couldn't find any movies. Please try again later.
+              We couldn&quot;t find any movies. Please try again later.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -208,8 +208,8 @@ export default function Home() {
               No Results Found
             </h3>
             <p className="text-gray-500 mb-4">
-              No movies match your search for "{searchQuery}". Try different
-              keywords.
+              No movies match your search for &quot;{searchQuery}&quot;. Try
+              different keywords.
             </p>
             <button
               onClick={() => setSearchQuery("")}
