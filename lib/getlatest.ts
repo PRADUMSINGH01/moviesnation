@@ -10,7 +10,7 @@ type MovieApiResponse = {
 };
 
 type Movie = ReturnType<typeof processMovieData>;
-
+import { RawMovie } from "@/types";
 function processMovieData(item: MovieApiResponse) {
   let imageUrl = "";
   if (typeof item.primaryImage === "string") {

@@ -26,7 +26,6 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const movieList = await getTopMovies();
       const latest = await getLatestMovies();
       setMovies([...latest]);
     };
