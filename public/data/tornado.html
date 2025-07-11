@@ -1,102 +1,30 @@
-// app/api/fetch-and-save/route.js
-
-import { NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
-
-const slugify = (text) =>
-  text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-export const GET = async () => {
-  const apiKey = process.env.RAPIDAPI_KEY;
-  const apiHost = process.env.RAPIDAPI_HOST;
-
-  if (!apiKey || !apiHost) {
-    return NextResponse.json(
-      { success: false, message: "Missing RAPIDAPI_KEY or RAPIDAPI_HOST" },
-      { status: 500 }
-    );
-  }
-
-  try {
-    const url = "https://imdb236.p.rapidapi.com/api/imdb/most-popular-movies";
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": apiHost,
-      },
-    });
-
-    if (!res.ok) {
-      return NextResponse.json(
-        { success: false, message: `Fetch failed: ${res.status}` },
-        { status: res.status }
-      );
-    }
-
-    const movies = await res.json();
-    const dataDir = path.join(process.cwd(), "data");
-    await fs.mkdir(dataDir, { recursive: true });
-
-    await Promise.all(
-      movies.map(async (m) => {
-        const title = m.primaryTitle || m.originalTitle || "movie";
-        const slug = slugify(title);
-        const filename = `${slug}.html`;
-        const filePath = path.join(dataDir, filename);
-
-        // Modern HTML template with dynamic data
-        const html = `<!DOCTYPE html>
+<!DOCTYPE html>
         <html lang="en">
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta name="robots" content="index, follow">
           <meta name="googlebot" content="index, follow">
-          <title>${title} | Movie Details & Download | Movieflix</title>
+          <title>Tornado | Movie Details & Download | Movieflix</title>
           
-          <meta name="description" content="${
-            m.description ||
-            "Discover details, cast information, and streaming options for " +
-              title
-          }">
-          <meta name="keywords" content="${title}, ${
-          m.genres ? m.genres.join(", ") : "movie"
-        }, download, watch online, streaming">
+          <meta name="description" content="A Japanese puppeteer's daughter gets caught up with criminals when their show crosses paths with a crime gang, led by Sugarman and his son Little Sugar.">
+          <meta name="keywords" content="Tornado, Action, Drama, Thriller, download, watch online, streaming">
           
           <!-- Open Graph / Social Media Meta Tags -->
-          <meta property="og:title" content="${title} | Movie Details">
-          <meta property="og:description" content="${
-            m.description ||
-            "Discover details and streaming options for " + title
-          }">
-          <meta property="og:image" content="${
-            m.primaryImage ||
-            "https://via.placeholder.com/800x450?text=Movie+Poster"
-          }">
-          <meta property="og:url" content="https://yourwebsite.com/movies/${slug}">
+          <meta property="og:title" content="Tornado | Movie Details">
+          <meta property="og:description" content="A Japanese puppeteer's daughter gets caught up with criminals when their show crosses paths with a crime gang, led by Sugarman and his son Little Sugar.">
+          <meta property="og:image" content="https://m.media-amazon.com/images/M/MV5BYTdmMjUzY2YtZDY4Yy00ZGI1LWI1ODktYmMyZjUzZmYwYWUwXkEyXkFqcGc@.jpg">
+          <meta property="og:url" content="https://yourwebsite.com/movies/tornado">
           <meta property="og:type" content="website">
           
           <!-- Twitter Card Meta Tags -->
           <meta name="twitter:card" content="summary_large_image">
-          <meta name="twitter:title" content="${title} | Movie Details">
-          <meta name="twitter:description" content="${
-            m.description ||
-            "Discover details and streaming options for " + title
-          }">
-          <meta name="twitter:image" content="${
-            m.primaryImage ||
-            "https://via.placeholder.com/800x450?text=Movie+Poster"
-          }">
+          <meta name="twitter:title" content="Tornado | Movie Details">
+          <meta name="twitter:description" content="A Japanese puppeteer's daughter gets caught up with criminals when their show crosses paths with a crime gang, led by Sugarman and his son Little Sugar.">
+          <meta name="twitter:image" content="https://m.media-amazon.com/images/M/MV5BYTdmMjUzY2YtZDY4Yy00ZGI1LWI1ODktYmMyZjUzZmYwYWUwXkEyXkFqcGc@.jpg">
           
           <!-- Canonical URL -->
-          <link rel="canonical" href="https://yourwebsite.com/movies/${slug}">
+          <link rel="canonical" href="https://yourwebsite.com/movies/tornado">
           
           <!-- Fonts & Icons -->
           <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -680,60 +608,18 @@ export const GET = async () => {
           {
             "@context": "https://schema.org",
             "@type": "Movie",
-            "name": "${title} Hindi Full Movie | 1080p | 720p | 480p",
-            ${m.primaryImage ? `"image": "${m.primaryImage}",` : ""}
-            ${
-              m.directors?.length
-                ? `"director": {
-              "@type": "Person",
-              "name": "${m.directors[0].fullName}"
-            },`
-                : ""
-            }
-            "dateCreated": "${m.releaseDate || "2025"}",
-            ${
-              m.runtime?.seconds
-                ? `"duration": "PT${Math.floor(m.runtime.seconds / 60)}M",`
-                : ""
-            }
-            ${
-              m.genres?.length
-                ? `"genre": ${JSON.stringify(m.genres.slice(0, 3))},`
-                : ""
-            }
-            "description": "${m.description || "Movie details"}",
-            ${
-              m.ratings?.averageRating
-                ? `"aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "${m.ratings.averageRating}",
-              "bestRating": "10",
-              "ratingCount": "${m.ratings.numVotes || "1000"}"
-            },`
-                : ""
-            }
-            ${
-              m.cast?.length
-                ? `"actor": [
-              ${m.cast
-                .slice(0, 3)
-                .map(
-                  (c) => `{
-                "@type": "Person",
-                "name": "${c.fullName}"
-              }`
-                )
-                .join(",")}
-            ],`
-                : ""
-            }
-            ${
-              m.productionCompanies?.length
-                ? `"productionCompany": {
+            "name": "Tornado Hindi Full Movie | 1080p | 720p | 480p",
+            "image": "https://m.media-amazon.com/images/M/MV5BYTdmMjUzY2YtZDY4Yy00ZGI1LWI1ODktYmMyZjUzZmYwYWUwXkEyXkFqcGc@.jpg",
+            
+            "dateCreated": "2025-06-13",
+            
+            "genre": ["Action","Drama","Thriller"],
+            "description": "A Japanese puppeteer's daughter gets caught up with criminals when their show crosses paths with a crime gang, led by Sugarman and his son Little Sugar.",
+            
+            
+            "productionCompany": {
               "@type": "Organization",
-              "name": "${m.productionCompanies[0].name}"
-            }`
-                : ""
+              "name": "Tea Shop Productions"
             }
           }
           </script>
@@ -742,246 +628,74 @@ export const GET = async () => {
           <div class="container">
             <header>
               <div class="breadcrumb">
-                <a href="/">Home</a> / <a href="/movies">Movies</a> / ${
-                  m.genres?.length
-                    ? `<a href="/genre/${m.genres[0].toLowerCase()}">${
-                        m.genres[0]
-                      }</a> / `
-                    : ""
-                }${title}
+                <a href="/">Home</a> / <a href="/movies">Movies</a> / <a href="/genre/action">Action</a> / Tornado
               </div>
               
               <div class="header-content">
-                <h1 class="movie-title">${title}</h1>
-                ${m.tagline ? `<p class="movie-subtitle">${m.tagline}</p>` : ""}
+                <h1 class="movie-title">Tornado</h1>
+                
                 
                 <section class="poster-section">
-                  ${
-                    m.primaryImage
-                      ? `<img src="${m.primaryImage}" alt="${title} movie poster" class="poster">`
-                      : `<div style="background: #0c162d; height: 400px; border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; color: #a8b2d1; font-size: 1.2rem;">Poster Not Available</div>`
-                  }
-                  ${
-                    m.ratings?.averageRating
-                      ? `<div class="rating-badge">
-                          <i class="fas fa-star"></i>
-                          <span>${m.ratings.averageRating}/10</span>
-                        </div>`
-                      : ""
-                  }
+                  <img src="https://m.media-amazon.com/images/M/MV5BYTdmMjUzY2YtZDY4Yy00ZGI1LWI1ODktYmMyZjUzZmYwYWUwXkEyXkFqcGc@.jpg" alt="Tornado movie poster" class="poster">
+                  
                 </section>
               </div>
             </header>
         
             <main class="details-section">
               <div class="meta-info">
-                ${
-                  m.releaseDate
-                    ? `
-                <div class="meta-item">
-                  <i class="fas fa-calendar-alt"></i><span>${new Date(
-                    m.releaseDate
-                  ).toLocaleDateString()}</span>
-                </div>`
-                    : ""
-                }
                 
-                ${
-                  m.runtime?.seconds
-                    ? `
                 <div class="meta-item">
-                  <i class="fas fa-clock"></i><span>${Math.floor(
-                    m.runtime.seconds / 60
-                  )} min</span>
-                </div>`
-                    : ""
-                }
+                  <i class="fas fa-calendar-alt"></i><span>6/13/2025</span>
+                </div>
                 
-                ${
-                  m.contentRating
-                    ? `
-                <div class="meta-item">
-                  <i class="fas fa-ticket-alt"></i><span>${m.contentRating}</span>
-                </div>`
-                    : ""
-                }
                 
-                ${
-                  m.spokenLanguages?.length
-                    ? `
+                
+                
                 <div class="meta-item">
-                  <i class="fas fa-globe"></i><span>${m.spokenLanguages[0]}</span>
-                </div>`
-                    : ""
-                }
+                  <i class="fas fa-ticket-alt"></i><span>R</span>
+                </div>
+                
+                
+                <div class="meta-item">
+                  <i class="fas fa-globe"></i><span>en</span>
+                </div>
               </div>
         
-              ${
-                m.description
-                  ? `
-              <p class="description">
-                ${m.description}
-              </p>`
-                  : ""
-              }
               
-              ${
-                m.genres?.length
-                  ? `
+              <p class="description">
+                A Japanese puppeteer's daughter gets caught up with criminals when their show crosses paths with a crime gang, led by Sugarman and his son Little Sugar.
+              </p>
+              
+              
               <div class="section-title">
                 <h2>Genres</h2>
               </div>
               <div class="tags">
-                ${m.genres.map((g) => `<span class="tag">${g}</span>`).join("")}
-              </div>`
-                  : ""
-              }
+                <span class="tag">Action</span><span class="tag">Drama</span><span class="tag">Thriller</span>
+              </div>
               
               <section>
                 <h2 class="section-title">Cast & Crew</h2>
                 <div class="info-grid">
-                  ${
-                    m.directors?.length
-                      ? `
-                  <div class="info-card">
-                    <h3><i class="fas fa-video"></i> Directors</h3>
-                    <ul>
-                      ${m.directors
-                        .slice(0, 3)
-                        .map(
-                          (d) => `
-                        <li>${d.fullName}</li>
-                      `
-                        )
-                        .join("")}
-                    </ul>
-                  </div>`
-                      : ""
-                  }
                   
-                  ${
-                    m.writers?.length
-                      ? `
-                  <div class="info-card">
-                    <h3><i class="fas fa-pen"></i> Writers</h3>
-                    <ul>
-                      ${m.writers
-                        .slice(0, 3)
-                        .map(
-                          (w) => `
-                        <li>${w.fullName}</li>
-                      `
-                        )
-                        .join("")}
-                    </ul>
-                  </div>`
-                      : ""
-                  }
                   
-                  ${
-                    m.cast?.length
-                      ? `
-                  <div class="info-card">
-                    <h3><i class="fas fa-building"></i> Production</h3>
-                    <ul>
-                      ${m.productionCompanies
-                        .slice(0, 3)
-                        .map(
-                          (c) => `
-                        <li>${c.name}</li>
-                      `
-                        )
-                        .join("")}
-                    </ul>
-                  </div>`
-                      : ""
-                  }
+                  
+                  
+                  
                 </div>
               </section>
         
               <section>
                 <h2 class="section-title">Top Cast</h2>
                 <div class="cast-grid">
-                  ${
-                    m.cast
-                      ?.slice(0, 4)
-                      .map(
-                        (c) => `
-                  <div class="cast-card">
-                    <img
-                      src="${
-                        c.image ||
-                        "https://via.placeholder.com/200x300?text=Actor"
-                      }"
-                      alt="${c.fullName}"
-                      class="cast-img"
-                    />
-                    <div class="cast-name">${c.fullName}</div>
-                    <div class="cast-character">${c.character || "Role"}</div>
-                  </div>
-                  `
-                      )
-                      .join("") || "<p>Cast information not available</p>"
-                  }
+                  <p>Cast information not available</p>
                 </div>
               </section>
         
-              ${
-                m.budget?.amount || m.grossWorldwide?.amount
-                  ? `
-              <section>
-                <h2 class="section-title">Financials</h2>
-                <div class="info-grid">
-                  ${
-                    m.budget?.amount
-                      ? `
-                  <div class="info-card">
-                    <h3><i class="fas fa-wallet"></i> Budget</h3>
-                    <ul>
-                      <li>$${(m.budget.amount / 1000000).toFixed(1)}M</li>
-                    </ul>
-                  </div>`
-                      : ""
-                  }
-                  
-                  ${
-                    m.grossWorldwide?.amount
-                      ? `
-                  <div class="info-card">
-                    <h3><i class="fas fa-cash-register"></i> Worldwide Gross</h3>
-                    <ul>
-                      <li>$${(m.grossWorldwide.amount / 1000000).toFixed(
-                        1
-                      )}M</li>
-                    </ul>
-                  </div>`
-                      : ""
-                  }
-                </div>
-              </section>`
-                  : ""
-              }
               
-              ${
-                m.trailer?.link
-                  ? `
-              <section>
-                <h2 class="section-title">Official Trailer</h2>
-                <div class="video-container">
-                  <iframe
-                    src="https://www.youtube.com/embed/${
-                      m.trailer.link.split("v=")[1]
-                    }"
-                    title="${title} Official Trailer"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen
-                  >
-                  </iframe>
-                </div>
-              </section>`
-                  : ""
-              }
+              
+              
               
               <!-- Download Servers Section -->
               <section class="download-section">
@@ -1083,8 +797,8 @@ export const GET = async () => {
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
               </div>
-              <p>© ${new Date().getFullYear()} CineStream. All rights reserved.</p>
-              <p>${title} is a trademark of its respective owners. This site is for educational purposes only.</p>
+              <p>© 2025 CineStream. All rights reserved.</p>
+              <p>Tornado is a trademark of its respective owners. This site is for educational purposes only.</p>
               <p>Data provided by IMDb.</p>
             </footer>
           </div>
@@ -1114,31 +828,4 @@ export const GET = async () => {
             });
           </script>
         </body>
-        </html>`;
-
-        await fs.writeFile(filePath, html, "utf-8");
-      })
-    );
-
-    // Prune older files to keep only 5
-    const files = await fs.readdir(dataDir);
-    const htmlFiles = files.filter((f) => f.endsWith(".html"));
-    const sorted = htmlFiles.sort((a, b) => {
-      const tA = +a.split("-").pop().replace(".html", "");
-      const tB = +b.split("-").pop().replace(".html", "");
-      return tB - tA;
-    });
-    await Promise.all(sorted.map((f) => fs.unlink(path.join(dataDir, f))));
-
-    return NextResponse.json(
-      { success: true, generated: movies.length },
-      { status: 200 }
-    );
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { success: false, message: err.message },
-      { status: 500 }
-    );
-  }
-};
+        </html>
