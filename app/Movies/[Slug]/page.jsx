@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { processMovieData } from "./processMovieData";
 import MovieTemplate from "./MovieTemplate";
-import { getMovieByIdFromLocal } from "@/lib/getById";
 
 export default function Page({ params }) {
   const [movie, setMovie] = useState(null);
