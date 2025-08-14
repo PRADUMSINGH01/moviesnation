@@ -1,27 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { processMovieData } from "./processMovieData";
 import MovieTemplate from "./MovieTemplate";
+import data from "@/data/Latest.json";
+import { use } from "react";
 
 export default function Page({ params }) {
-  const [movie, setMovie] = useState(null);
+  // Client components can access params directly
+  const { Slug } = use(params); // unwrap Promise
 
-  useEffect(() => {
-    async function loadMovie() {
-      const resolvedParams = await params;
-      const slug = resolvedParams?.Slug;
+  const slugLower = Slug.toLowerCase();
 
-      const rawMovie = getMovieByIdFromLocal(slug);
-      const processedMovie = processMovieData(rawMovie);
+  const rawMovie = data.find(
+    (m) =>
+      m.id.toLowerCase() === slugLower ||
+      m.primaryTitle.toLowerCase().replace(/\s+/g, "-") === slugLower
+  );
+  console.log(rawMovie);
 
-      setMovie(processedMovie);
-    }
+  if (!rawMovie) return <div>Movie not found</div>;
 
-    loadMovie();
-  }, [params]);
+  const movie = processMovieData(rawMovie);
 
-  if (!movie) return <div>Loading...</div>;
-
-  return <MovieTemplate movie={movie} />;
+  return <MovieTemplate movieData={movie} />;
 }
