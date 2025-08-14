@@ -37,7 +37,7 @@ export async function GET() {
     // Build sitemap XML
     const urls = movies
       .map((movie) => {
-        const slug = slugify(`${movie.primaryTitle} latest movie`, {
+        const slug = slugify(`${movie.primaryTitle}`, {
           lower: true,
           strict: true,
         });

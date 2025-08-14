@@ -3,15 +3,17 @@
 import { processMovieData } from "./processMovieData";
 import MovieTemplate from "./MovieTemplate";
 import data from "@/data/Latest.json";
+import moremovies from "@/data/movies.json";
+
 import { use } from "react";
 import AdManager from "./Ads";
 export default function Page({ params }) {
   // Client components can access params directly
+  const full = [...data, ...moremovies];
   const { Slug } = use(params); // unwrap Promise
-
   const slugLower = Slug.toLowerCase();
 
-  const rawMovie = data.find(
+  const rawMovie = full.find(
     (m) =>
       m.id.toLowerCase() === slugLower ||
       m.primaryTitle.toLowerCase().replace(/\s+/g, "-") === slugLower
