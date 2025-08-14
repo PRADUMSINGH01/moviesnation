@@ -13,7 +13,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <div className="bg-gray-900 text-white rounded-lg shadow-md overflow-hidden transition hover:scale-105 duration-300">
-      <Link href={`/Movies/${movie.id}`}>
+      <Link href={`/Movies/${movie.primaryTitle.replace(/\s+/g, "-")}`}>
         <Image
           src={imageUrl}
           alt={movie.primaryTitle}

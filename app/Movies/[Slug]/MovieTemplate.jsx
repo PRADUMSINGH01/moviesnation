@@ -159,7 +159,12 @@ const IMDbProfessionalPage = ({ movieData }) => {
 
   const trailerVideoId = getYouTubeId(trailer);
   const downloadServers = [
-    { id: 1, name: "Server EU Premium", quality: "1080p BluRay", size: "4.2GB" },
+    {
+      id: 1,
+      name: "Server EU Premium",
+      quality: "1080p BluRay",
+      size: "4.2GB",
+    },
     { id: 2, name: "Server US Express", quality: "720p WEB-DL", size: "2.8GB" },
     { id: 3, name: "Server Asia HD", quality: "1080p HDRip", size: "3.5GB" },
     { id: 4, name: "Server Global", quality: "4K UHD", size: "12.1GB" },
@@ -205,9 +210,7 @@ const IMDbProfessionalPage = ({ movieData }) => {
         <header className="bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-md">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center ">
             <ImdbIcon className="w-16 h-16 mr-3 text-black" />
-            <h1 className="text-2xl md:text-3xl font-bold text-black tracking-tighter">
-              IMDb Professional
-            </h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-black tracking-tighter"></h1>
           </div>
         </header>
 
@@ -260,7 +263,7 @@ const IMDbProfessionalPage = ({ movieData }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="bg-[#1a1a1a]/80 p-5 rounded-xl border border-gray-800">
                   <h3 className="text-lg font-semibold text-gray-400 mb-2">
-                    IMDb Rating
+                    Moviesflix Rating
                   </h3>
                   <div className="flex items-center gap-4">
                     <div className="relative">
@@ -404,7 +407,7 @@ const IMDbProfessionalPage = ({ movieData }) => {
                   <ul className="space-y-2">
                     <li>
                       <a
-                        href="#"
+                        href="https://www.profitableratecpm.com/mxuf6yhw1?key=8b3a8975b0ba4277507334f940dafe55"
                         className="flex items-center py-2 px-3 hover:bg-gray-800/50 rounded-lg transition-colors"
                       >
                         <svg
@@ -426,7 +429,7 @@ const IMDbProfessionalPage = ({ movieData }) => {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href="https://www.profitableratecpm.com/mxuf6yhw1?key=8b3a8975b0ba4277507334f940dafe55"
                         className="flex items-center py-2 px-3 hover:bg-gray-800/50 rounded-lg transition-colors"
                       >
                         <svg
@@ -448,7 +451,7 @@ const IMDbProfessionalPage = ({ movieData }) => {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href="https://www.profitableratecpm.com/mxuf6yhw1?key=8b3a8975b0ba4277507334f940dafe55"
                         className="flex items-center py-2 px-3 hover:bg-gray-800/50 rounded-lg transition-colors"
                       >
                         <svg
@@ -470,7 +473,7 @@ const IMDbProfessionalPage = ({ movieData }) => {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href="https://www.profitableratecpm.com/mxuf6yhw1?key=8b3a8975b0ba4277507334f940dafe55"
                         className="flex items-center py-2 px-3 hover:bg-gray-800/50 rounded-lg transition-colors"
                       >
                         <svg
@@ -497,25 +500,24 @@ const IMDbProfessionalPage = ({ movieData }) => {
           </div>
         </main>
 
-      
         <aside>
           <div className="sticky top-4">
             {/* ... existing poster and quick links ... */}
+            <h3 className="text-lg font-semibold bg-red-500 text-gray-300 text-center p-4 flex justify-center">
+              Download Servers
+            </h3>
 
             {/* ===== NEW DOWNLOAD SERVERS SECTION ===== */}
             <div className="mt-6 bg-[#1a1a1a]/80 border border-gray-800 rounded-xl p-5">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-300">
-                  Download Servers
-                </h3>
                 <span className="text-xs text-gray-500 bg-gray-900/50 px-2 py-1 rounded">
                   {downloadServers.length} options
                 </span>
               </div>
-              
+
               <div className="space-y-3">
                 {downloadServers.map((server) => (
-                  <div 
+                  <div
                     key={server.id}
                     className="flex justify-between items-center p-3 bg-gray-900/30 rounded-lg hover:bg-gray-800/50 transition-colors"
                   >
@@ -531,19 +533,24 @@ const IMDbProfessionalPage = ({ movieData }) => {
                       </div>
                     </div>
                     <button className="bg-yellow-600 hover:bg-yellow-700 text-black text-sm font-medium py-1.5 px-3 rounded transition-colors flex items-center">
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className="h-4 w-4 mr-1" 
-                        viewBox="0 0 20 20" 
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        viewBox="0 0 20 20"
                         fill="currentColor"
                       >
-                        <path 
-                          fillRule="evenodd" 
-                          d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" 
-                          clipRule="evenodd" 
+                        <path
+                          fillRule="evenodd"
+                          d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                          clipRule="evenodd"
                         />
                       </svg>
-                      Download
+                      <a
+                        target="_blank"
+                        href="https://www.profitableratecpm.com/mxuf6yhw1?key=8b3a8975b0ba4277507334f940dafe55"
+                      >
+                        Download
+                      </a>
                     </button>
                   </div>
                 ))}
@@ -552,16 +559,16 @@ const IMDbProfessionalPage = ({ movieData }) => {
               <div className="mt-4 text-center">
                 <button className="text-sm text-gray-400 hover:text-yellow-400 transition-colors flex items-center justify-center w-full">
                   Show more servers
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-4 w-4 ml-1" 
-                    viewBox="0 0 20 20" 
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 ml-1"
+                    viewBox="0 0 20 20"
                     fill="currentColor"
                   >
-                    <path 
-                      fillRule="evenodd" 
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" 
-                      clipRule="evenodd" 
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
                     />
                   </svg>
                 </button>
@@ -570,6 +577,79 @@ const IMDbProfessionalPage = ({ movieData }) => {
           </div>
         </aside>
 
+        <h1 className="flex justify-center text-2xl p-4 bg-green-400">
+          Watch sever
+        </h1>
+        <aside>
+          <div className="sticky top-4">
+            <div className="mt-6 bg-[#1a1a1a]/80 border border-gray-800 rounded-xl p-5">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-xs text-gray-500 bg-gray-900/50 px-2 py-1 rounded">
+                  {downloadServers.length} options
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {downloadServers.map((server) => (
+                  <div
+                    key={server.id}
+                    className="flex justify-between items-center p-3 bg-gray-900/30 rounded-lg hover:bg-gray-800/50 transition-colors"
+                  >
+                    <div>
+                      <div className="font-medium flex items-center">
+                        {server.name}
+                        <span className="ml-2 text-xs bg-yellow-900/30 text-yellow-400 px-1.5 py-0.5 rounded">
+                          {server.quality}
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        {server.size}
+                      </div>
+                    </div>
+                    <button className="bg-red-600 hover:bg-yellow-700 text-black text-sm font-medium py-1.5 px-3 rounded transition-colors flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <a
+                        target="_blank"
+                        href="https://www.profitableratecpm.com/mxuf6yhw1?key=8b3a8975b0ba4277507334f940dafe55"
+                      >
+                        Watch
+                      </a>
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4 text-center">
+                <button className="text-sm text-gray-400 hover:text-yellow-400 transition-colors flex items-center justify-center w-full">
+                  Show more servers
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 ml-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
     </>
   );
