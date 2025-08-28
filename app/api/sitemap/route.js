@@ -31,11 +31,23 @@ export async function GET() {
 
     // Fetch movie data
     const movies = JSON.parse(
-      fs.readFileSync(path.join(DATA_DIR, "Latest.json"), "utf8")
+      fs.readFileSync(path.join(DATA_DIR, "movies.json"), "utf8")
     );
 
-    // Build sitemap XML
-    const urls = movies
+    const TV = JSON.parse(
+      fs.readFileSync(path.join(DATA_DIR, "TV.json"), "utf8")
+    );
+    const IND = JSON.parse(
+      fs.readFileSync(path.join(DATA_DIR, "IND.json"), "utf8")
+    );
+    const INDTOPM = JSON.parse(
+      fs.readFileSync(path.join(DATA_DIR, "INDTOPM.json"), "utf8")
+    );
+
+    const res = [...movies, ...TV, ...IND, ...INDTOPM];
+    console.log(res.length , '---------------------------');
+    // Build sitemap XMLawait INDTOPM
+    const urls = res
       .map((movie) => {
         const slug = slugify(`${movie.primaryTitle}`, {
           lower: true,
