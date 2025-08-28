@@ -134,7 +134,7 @@ export const HyperlinkAd = () => (
     target="_blank"
     rel="noopener noreferrer"
   >
-    Ad Link
+    
   </a>
 );
 

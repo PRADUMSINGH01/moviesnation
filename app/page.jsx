@@ -3,10 +3,17 @@
 import { useState, useEffect } from "react";
 import MovieCard from "@/components/MovieCard";
 import MovieSearch from "@/components/MovieSearch";
-import localMovies from "../data/Latest.json";
-import latestMovies from "../data/movies.json";
+import localMovies from "../data/movies.json";
+// Correctly import the last fetched time
+import lastFetchInfo from "../data/last-fetch.json";
+import INDTOPM from "../data/INDTOPM.json";
+import INDTOPMTIME from "../data/lastINDTOPM-fetch.json";
+// Reusable Pagination Component (unchanged)
+import TVshow from "../data/TV.json";
+import TVupdate from "../data/lastTV-fetch.json";
 
-// Reusable Pagination Component
+////
+
 function Pagination({ currentPage, totalPages, onPageChange }) {
   if (totalPages <= 1) return null;
 
@@ -97,70 +104,313 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
-  const [latest, setLatest] = useState([]);
+  const [INDmovie, setINDTOPM] = useState([]);
+  const [lastUpdatedIND, setLastUpdatedIND] = useState(null);
+  //-------------TV--------
+
+  const [TV, SetTV] = useState([]);
+  const [TVupdates, setTVupdate] = useState(null);
+
   const [currentPageMovies, setCurrentPageMovies] = useState(1);
-  const [currentPageLatest, setCurrentPageLatest] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [source, setSource] = useState(null);
 
   const itemsPerPage = 12;
 
+  //top  movies --------------
+
   useEffect(() => {
-    const fetchMovies = async () => {
+    let mounted = true;
+
+    const checkAndLoadMovies = async () => {
       setIsLoading(true);
       setError(null);
 
-      try {
-        if (Array.isArray(localMovies) && localMovies.length > 0) {
-          setMovies(localMovies);
-          setLatest(latestMovies);
-          setIsLoading(false);
-          return;
-        }
+      const lastFetchDate = lastFetchInfo?.lastUpdated
+        ? new Date(lastFetchInfo.lastUpdated)
+        : null;
+      const now = new Date();
+      let shouldFetch = true; // Default to fetching if no date is found
 
-        const apiRes = await fetch("/api/fetch-latest", { cache: "no-store" });
-        if (!apiRes.ok) throw new Error("Failed to fetch movies from API");
+      if (lastFetchDate) {
+        const diffTime = Math.abs(now - lastFetchDate);
+        const diffHours = diffTime / (1000 * 60 * 60);
 
-        const apiData = await apiRes.json();
-        if (Array.isArray(apiData)) {
-          setMovies(apiData);
-        } else if (apiData.movies) {
-          setMovies(apiData.movies);
-        } else {
-          throw new Error("Invalid API response format");
+        // If the data is less than or equal to 72 hours old, don't fetch.
+        if (diffHours <= 72) {
+          shouldFetch = false;
         }
-      } catch (err) {
-        console.error("Failed to load movies:", err);
-        setError("Failed to load movies. Please try again later.");
-      } finally {
+      }
+
+      if (shouldFetch) {
+        // --- Fetch new data from API ---
+        console.log("Data is stale or missing. Fetching from API...");
+        try {
+          // The API endpoint should now *always* fetch new data.
+          const apiRes = await fetch("/api/movies", { cache: "no-store" });
+          if (!apiRes.ok) throw new Error(`API error: ${apiRes.statusText}`);
+
+          const apiData = await apiRes.json();
+
+          if (mounted) {
+            if (Array.isArray(apiData.movies)) {
+              setMovies(apiData.movies);
+            }
+            if (apiData.lastUpdated) {
+              setLastUpdated(apiData.lastUpdated);
+            }
+            // The source will be what the API returns (e.g., 'remote-api')
+            if (apiData.source) {
+              setSource(apiData.source);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load movies from API:", err);
+          if (mounted) {
+            setError(err.message || "Failed to load movies.");
+          }
+        } finally {
+          if (mounted) setIsLoading(false);
+        }
+      } else {
+        // --- Use local JSON data ---
+        console.log("Data is recent. Loading from local JSON.");
+        setMovies(localMovies);
+        setLastUpdated(lastFetchInfo.lastUpdated);
+        setSource("local-cache");
         setIsLoading(false);
       }
     };
 
-    fetchMovies();
+    checkAndLoadMovies();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  // Main Movies
+  //top indian movies-------------
+
+  useEffect(() => {
+    let mounted = true;
+
+    const checkAndLoadMovies = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      const lastFetchDate = INDTOPMTIME?.lastUpdated
+        ? new Date(INDTOPMTIME.lastUpdated)
+        : null;
+      const now = new Date();
+      let shouldFetch = true; // Default to fetching if no date is found
+
+      if (lastFetchDate) {
+        const diffTime = Math.abs(now - lastFetchDate);
+        const diffHours = diffTime / (1000 * 60 * 60);
+
+        // If the data is less than or equal to 72 hours old, don't fetch.
+        if (diffHours <= 72) {
+          shouldFetch = false;
+        }
+      }
+
+      if (shouldFetch) {
+        // --- Fetch new data from API ---
+        console.log("Data is stale or missing. Fetching from API...");
+        try {
+          // The API endpoint should now *always* fetch new data.
+          const apiRes = await fetch("/api/INDTOP", { cache: "no-store" });
+          if (!apiRes.ok) throw new Error(`API error: ${apiRes.statusText}`);
+
+          const apiData = await apiRes.json();
+
+          if (mounted) {
+            if (Array.isArray(apiData.movies)) {
+              setINDTOPM(apiData.movies);
+            }
+            if (apiData.lastUpdated) {
+              setLastUpdatedIND(apiData.lastUpdated);
+            }
+            // The source will be what the API returns (e.g., 'remote-api')
+            if (apiData.source) {
+              setSource(apiData.source);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load movies from API:", err);
+          if (mounted) {
+            setError(err.message || "Failed to load movies.");
+          }
+        } finally {
+          if (mounted) setIsLoading(false);
+        }
+      } else {
+        // --- Use local JSON data ---
+        console.log("Data is recent. Loading from local JSON.");
+        setINDTOPM(INDTOPM);
+        setLastUpdatedIND(INDTOPMTIME.lastUpdated);
+        setSource("local-cache");
+        setIsLoading(false);
+      }
+    };
+
+    checkAndLoadMovies();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  //top TV -------------
+
+  useEffect(() => {
+    let mounted = true;
+
+    const checkAndLoadMovies = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      const lastFetchDate = TVupdate?.lastUpdated
+        ? new Date(TVupdate.lastUpdated)
+        : null;
+      const now = new Date();
+      let shouldFetch = true; // Default to fetching if no date is found
+
+      if (lastFetchDate) {
+        const diffTime = Math.abs(now - lastFetchDate);
+        const diffHours = diffTime / (1000 * 60 * 60);
+
+        // If the data is less than or equal to 72 hours old, don't fetch.
+        if (diffHours <= 72) {
+          shouldFetch = false;
+        }
+      }
+
+      if (shouldFetch) {
+        // --- Fetch new data from API ---
+        console.log("Data is stale or missing. Fetching from API...");
+        try {
+          // The API endpoint should now *always* fetch new data.
+          const apiRes = await fetch("/api/fetch-and-save", {
+            cache: "no-store",
+          });
+          if (!apiRes.ok) throw new Error(`API error: ${apiRes.statusText}`);
+
+          const apiData = await apiRes.json();
+
+          if (mounted) {
+            if (Array.isArray(apiData.movies)) {
+              SetTV(apiData.movies);
+            }
+            if (apiData.lastUpdated) {
+              setTVupdate(apiData.lastUpdated);
+            }
+            // The source will be what the API returns (e.g., 'remote-api')
+            if (apiData.source) {
+              setSource(apiData.source);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load movies from API:", err);
+          if (mounted) {
+            setError(err.message || "Failed to load movies.");
+          }
+        } finally {
+          if (mounted) setIsLoading(false);
+        }
+      } else {
+        // --- Use local JSON data ---
+        console.log("Data is recent. Loading from local JSON.");
+        SetTV(TVshow);
+        setTVupdate(TVshow.lastUpdated);
+        setSource("local-cache");
+        setIsLoading(false);
+      }
+    };
+
+    checkAndLoadMovies();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // reset page when search changes
+  useEffect(() => {
+    setCurrentPageMovies(1);
+  }, [searchQuery]);
+
+  // Pagination helpers
   const filteredMovies = movies.filter((movie) =>
-    movie.primaryTitle?.toLowerCase().includes(searchQuery.toLowerCase())
+    movie?.primaryTitle?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const totalPagesMovies = Math.ceil(filteredMovies.length / itemsPerPage);
+  const totalPagesMovies = Math.max(
+    1,
+    Math.ceil(filteredMovies.length / itemsPerPage)
+  );
   const displayedMovies = filteredMovies.slice(
     (currentPageMovies - 1) * itemsPerPage,
     currentPageMovies * itemsPerPage
   );
 
-  // Latest Movies
-  const totalPagesLatest = Math.ceil(latest.length / itemsPerPage);
-  const displayedLatest = latest.slice(
-    (currentPageLatest - 1) * itemsPerPage,
-    currentPageLatest * itemsPerPage
+  const ind = INDmovie.filter((movie) =>
+    movie?.primaryTitle?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  const totalPagesMoviesINDmovie = Math.max(
+    1,
+    Math.ceil(ind.length / itemsPerPage)
+  );
+  const displayedMoviesINDmovie = ind.slice(
+    (currentPageMovies - 1) * itemsPerPage,
+    currentPageMovies * itemsPerPage
+  );
+
+  ///////tv pegination --------
+
+  const filtered = TV.filter((movie) =>
+    movie?.primaryTitle?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const totalPagesTVes = Math.max(
+    1,
+    Math.ceil(filteredMovies.length / itemsPerPage)
+  );
+  const displayedTV = filtered.slice(
+    (currentPageMovies - 1) * itemsPerPage,
+    currentPageMovies * itemsPerPage
+  );
+
+  // clamp page if data size changes
+  useEffect(() => {
+    if (currentPageMovies > totalPagesMovies) {
+      setCurrentPageMovies(totalPagesMovies || 1);
+    }
+  }, [totalPagesMovies, currentPageMovies]);
+
+  // safe page setters (clamp)
+  const handlePageChangeMovies = (page) => {
+    const p = Math.max(1, Math.min(page, totalPagesMovies));
+    setCurrentPageMovies(p);
+  };
 
   return (
     <div className="pt-24 pb-16 px-4">
-      <MovieSearch onSearch={setSearchQuery} />
+      <div className="max-w-7xl mx-auto mb-6 flex items-center justify-between gap-4">
+        <MovieSearch onSearch={setSearchQuery} />
+        {/* Last-updated badge */}
+        {lastUpdated && (
+          <div className="text-sm text-gray-300">
+            <span className="mr-2 text-xs uppercase text-gray-400">
+              Freshness
+            </span>
+            <span className="px-3 py-1 rounded bg-gray-800 text-gray-200">
+              {source ?? "unknown"} • {new Date(lastUpdated).toLocaleString()}
+            </span>
+          </div>
+        )}
+      </div>
 
       {isLoading && (
         <div className="text-center py-12">
@@ -177,14 +427,22 @@ export default function Home() {
         </div>
       )}
 
-      {!isLoading && (
+      {!isLoading && !error && (
         <>
           {/* Movies Section */}
-          {displayedMovies.length > 0 && (
+          {displayedMovies.length > 0 ? (
             <section className="max-w-7xl mx-auto mb-16">
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-6">
                 {displayedMovies.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} />
+                  <MovieCard
+                    key={
+                      movie.id ??
+                      movie.movieId ??
+                      movie.tconst ??
+                      movie.primaryTitle
+                    }
+                    movie={movie}
+                  />
                 ))}
               </div>
 
@@ -192,32 +450,90 @@ export default function Home() {
                 <Pagination
                   currentPage={currentPageMovies}
                   totalPages={totalPagesMovies}
-                  onPageChange={setCurrentPageMovies}
+                  onPageChange={handlePageChangeMovies}
                 />
               </div>
             </section>
+          ) : (
+            <div className="text-center py-12 text-gray-400">
+              <p>No movies found.</p>
+            </div>
           )}
+        </>
+      )}
 
-          {/* Latest Movies Section */}
-          {displayedLatest.length > 0 && (
-            <section className="max-w-7xl mx-auto">
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-200 mb-4">
-                Latest Movies
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {displayedLatest.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} />
+      <h1 className=" flex text-4xl font-bold  py-6 m-6 text-yellow-500">
+        Top TV show to watch and download{" "}
+      </h1>
+      {!isLoading && !error && (
+        <>
+          {/* Movies Section */}
+          {displayedTV.length > 0 ? (
+            <section className="max-w-7xl mx-auto mb-16">
+              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-6">
+                {displayedTV.map((movie) => (
+                  <MovieCard
+                    key={
+                      movie.id ??
+                      movie.movieId ??
+                      movie.tconst ??
+                      movie.primaryTitle
+                    }
+                    movie={movie}
+                  />
                 ))}
               </div>
 
               <div className="mt-6">
                 <Pagination
-                  currentPage={currentPageLatest}
-                  totalPages={totalPagesLatest}
-                  onPageChange={setCurrentPageLatest}
+                  currentPage={currentPageMovies}
+                  totalPages={totalPagesMovies}
+                  onPageChange={handlePageChangeMovies}
                 />
               </div>
             </section>
+          ) : (
+            <div className="text-center py-12 text-gray-400">
+              <p>No movies found.</p>
+            </div>
+          )}
+        </>
+      )}
+
+      <h1 className=" flex text-4xl font-bold  py-6 m-6 text-yellow-500">
+        Top Indian Movies to watch and download{" "}
+      </h1>
+      {!isLoading && !error && (
+        <>
+          {/* Movies Section */}
+          {displayedMoviesINDmovie.length > 0 ? (
+            <section className="max-w-7xl mx-auto mb-16">
+              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-6">
+                {displayedMoviesINDmovie.map((movie) => (
+                  <MovieCard
+                    key={
+                      movie.id ??
+                      movie.movieId ??
+                      movie.tconst ??
+                      movie.primaryTitle
+                    }
+                    movie={movie}
+                  />
+                ))}
+              </div>
+
+              <div className="mt-6">
+                <Pagination
+                  currentPage={currentPageMovies}
+                  totalPages={totalPagesMovies}
+                  onPageChange={handlePageChangeMovies}
+                />
+              </div>
+            </section>
+          ) : (
+            <div className="text-center py-12 text-gray-400">
+              <p>No movies found.</p>
+            </div>
           )}
         </>
       )}

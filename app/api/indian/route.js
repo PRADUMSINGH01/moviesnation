@@ -5,9 +5,9 @@ import { NextResponse } from "next/server";
 // --- Configuration ---
 // Note: In Next.js, the 'data' directory should be at the root of your project.
 const DATA_DIR = path.join(process.cwd(), "data");
-const MOVIES_FILE = path.join(DATA_DIR, "TV.json");
+const MOVIES_FILE = path.join(DATA_DIR, "IND.json");
 // ADDED: A new file to store the timestamp of the last fetch.
-const LAST_FETCH_FILE = path.join(DATA_DIR, "lastTV-fetch.json");
+const LAST_FETCH_FILE = path.join(DATA_DIR, "lastIND-fetch.json");
 
 // --- RapidAPI Settings ---
 // These must be set in your .env.local file at the project root.
@@ -17,8 +17,7 @@ const LAST_FETCH_FILE = path.join(DATA_DIR, "lastTV-fetch.json");
 const RAPIDAPI_HOST = process.env.RAPIDAPI_HOST;
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 // CORRECTED: Updated the API path to a valid endpoint for popular movie charts.
-const RAPIDAPI_PATH =
-  "https://imdb236.p.rapidapi.com/api/imdb/most-popular-tv";
+const RAPIDAPI_PATH ="https://imdb236.p.rapidapi.com/api/imdb/india/upcoming";
 
 // --- Helper Functions ---
 

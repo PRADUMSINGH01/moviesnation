@@ -2,14 +2,16 @@
 
 import { processMovieData } from "./processMovieData";
 import MovieTemplate from "./MovieTemplate";
-import data from "@/data/Latest.json";
-import moremovies from "@/data/movies.json";
+import data from "@/data/movies.json";
+import moremovies from "@/data/IND.json";
+import indtomo from "@/data/INDTOPM.json";
+import TV from "@/data/TV.json";
 
 import { use } from "react";
 import AdManager from "./Ads";
 export default function Page({ params }) {
   // Client components can access params directly
-  const full = [...data, ...moremovies];
+  const full = [...data, ...moremovies, ...indtomo, ...TV];
   const { Slug } = use(params); // unwrap Promise
   const slugLower = Slug.toLowerCase();
 
