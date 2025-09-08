@@ -129,60 +129,10 @@ export default function Home() {
       setIsLoading(true);
       setError(null);
 
-      const lastFetchDate = lastFetchInfo?.lastUpdated
-        ? new Date(lastFetchInfo.lastUpdated)
-        : null;
-      const now = new Date();
-      let shouldFetch = true; // Default to fetching if no date is found
-
-      if (lastFetchDate) {
-        const diffTime = Math.abs(now - lastFetchDate);
-        const diffHours = diffTime / (1000 * 60 * 60);
-
-        // If the data is less than or equal to 72 hours old, don't fetch.
-        if (diffHours <= 72) {
-          shouldFetch = false;
-        }
-      }
-
-      if (shouldFetch) {
-        // --- Fetch new data from API ---
-        console.log("Data is stale or missing. Fetching from API...");
-        try {
-          // The API endpoint should now *always* fetch new data.
-          const apiRes = await fetch("/api/movies", { cache: "no-store" });
-          if (!apiRes.ok) throw new Error(`API error: ${apiRes.statusText}`);
-
-          const apiData = await apiRes.json();
-
-          if (mounted) {
-            if (Array.isArray(apiData.movies)) {
-              setMovies(apiData.movies);
-            }
-            if (apiData.lastUpdated) {
-              setLastUpdated(apiData.lastUpdated);
-            }
-            // The source will be what the API returns (e.g., 'remote-api')
-            if (apiData.source) {
-              setSource(apiData.source);
-            }
-          }
-        } catch (err) {
-          console.error("Failed to load movies from API:", err);
-          if (mounted) {
-            setError(err.message || "Failed to load movies.");
-          }
-        } finally {
-          if (mounted) setIsLoading(false);
-        }
-      } else {
-        // --- Use local JSON data ---
-        console.log("Data is recent. Loading from local JSON.");
-        setMovies(localMovies);
-        setLastUpdated(lastFetchInfo.lastUpdated);
-        setSource("local-cache");
-        setIsLoading(false);
-      }
+      setMovies(localMovies);
+      setLastUpdated(lastFetchInfo.lastUpdated);
+      setSource("local-cache");
+      setIsLoading(false);
     };
 
     checkAndLoadMovies();
@@ -201,60 +151,10 @@ export default function Home() {
       setIsLoading(true);
       setError(null);
 
-      const lastFetchDate = INDTOPMTIME?.lastUpdated
-        ? new Date(INDTOPMTIME.lastUpdated)
-        : null;
-      const now = new Date();
-      let shouldFetch = true; // Default to fetching if no date is found
-
-      if (lastFetchDate) {
-        const diffTime = Math.abs(now - lastFetchDate);
-        const diffHours = diffTime / (1000 * 60 * 60);
-
-        // If the data is less than or equal to 72 hours old, don't fetch.
-        if (diffHours <= 72) {
-          shouldFetch = false;
-        }
-      }
-
-      if (shouldFetch) {
-        // --- Fetch new data from API ---
-        console.log("Data is stale or missing. Fetching from API...");
-        try {
-          // The API endpoint should now *always* fetch new data.
-          const apiRes = await fetch("/api/INDTOP", { cache: "no-store" });
-          if (!apiRes.ok) throw new Error(`API error: ${apiRes.statusText}`);
-
-          const apiData = await apiRes.json();
-
-          if (mounted) {
-            if (Array.isArray(apiData.movies)) {
-              setINDTOPM(apiData.movies);
-            }
-            if (apiData.lastUpdated) {
-              setLastUpdatedIND(apiData.lastUpdated);
-            }
-            // The source will be what the API returns (e.g., 'remote-api')
-            if (apiData.source) {
-              setSource(apiData.source);
-            }
-          }
-        } catch (err) {
-          console.error("Failed to load movies from API:", err);
-          if (mounted) {
-            setError(err.message || "Failed to load movies.");
-          }
-        } finally {
-          if (mounted) setIsLoading(false);
-        }
-      } else {
-        // --- Use local JSON data ---
-        console.log("Data is recent. Loading from local JSON.");
-        setINDTOPM(INDTOPM);
-        setLastUpdatedIND(INDTOPMTIME.lastUpdated);
-        setSource("local-cache");
-        setIsLoading(false);
-      }
+      setINDTOPM(INDTOPM);
+      setLastUpdatedIND(INDTOPMTIME.lastUpdated);
+      setSource("local-cache");
+      setIsLoading(false);
     };
 
     checkAndLoadMovies();
@@ -273,62 +173,10 @@ export default function Home() {
       setIsLoading(true);
       setError(null);
 
-      const lastFetchDate = TVupdate?.lastUpdated
-        ? new Date(TVupdate.lastUpdated)
-        : null;
-      const now = new Date();
-      let shouldFetch = true; // Default to fetching if no date is found
-
-      if (lastFetchDate) {
-        const diffTime = Math.abs(now - lastFetchDate);
-        const diffHours = diffTime / (1000 * 60 * 60);
-
-        // If the data is less than or equal to 72 hours old, don't fetch.
-        if (diffHours <= 72) {
-          shouldFetch = false;
-        }
-      }
-
-      if (shouldFetch) {
-        // --- Fetch new data from API ---
-        console.log("Data is stale or missing. Fetching from API...");
-        try {
-          // The API endpoint should now *always* fetch new data.
-          const apiRes = await fetch("/api/fetch-and-save", {
-            cache: "no-store",
-          });
-          if (!apiRes.ok) throw new Error(`API error: ${apiRes.statusText}`);
-
-          const apiData = await apiRes.json();
-
-          if (mounted) {
-            if (Array.isArray(apiData.movies)) {
-              SetTV(apiData.movies);
-            }
-            if (apiData.lastUpdated) {
-              setTVupdate(apiData.lastUpdated);
-            }
-            // The source will be what the API returns (e.g., 'remote-api')
-            if (apiData.source) {
-              setSource(apiData.source);
-            }
-          }
-        } catch (err) {
-          console.error("Failed to load movies from API:", err);
-          if (mounted) {
-            setError(err.message || "Failed to load movies.");
-          }
-        } finally {
-          if (mounted) setIsLoading(false);
-        }
-      } else {
-        // --- Use local JSON data ---
-        console.log("Data is recent. Loading from local JSON.");
-        SetTV(TVshow);
-        setTVupdate(TVshow.lastUpdated);
-        setSource("local-cache");
-        setIsLoading(false);
-      }
+      SetTV(TVshow);
+      setTVupdate(TVshow.lastUpdated);
+      setSource("local-cache");
+      setIsLoading(false);
     };
 
     checkAndLoadMovies();
